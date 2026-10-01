@@ -1,0 +1,184 @@
+{
+  "Jeevanandham.M": [
+    {
+      "id": "396fea3e-b8c1-4dd7-83bd-98d229367e33",
+      "username": "Jeevanandham.M",
+      "timestamp": "2026-09-26T08:37:38.382127",
+      "recommendation_type": "home",
+      "input_summary": {
+        "total_budget": 50000.0,
+        "num_lights": 5,
+        "num_fans": 4,
+        "num_furniture": 2,
+        "num_dining_tables": 1,
+        "has_living_room": true,
+        "has_kitchen": true,
+        "has_bedroom": false,
+        "additional_requirements": null
+      },
+      "result_summary": {
+        "total_budget": 50000.0,
+        "remaining_budget": 2600.0
+      },
+      "full_result": {
+        "total_budget": 50000.0,
+        "budget_breakdown": [
+          {
+            "category": "Lighting",
+            "allocation": 4400.0,
+            "items": [
+              {
+                "name": "3-Light Cluster Pendant Hanging Lamp",
+                "description": "Black matte geometric cage pendant lamp suitable for living room focal lighting or over the dining space.",
+                "estimated_price": 1700.0,
+                "quantity": 1,
+                "search_terms": "geometric cluster hanging ceiling pendant light living room Amazon India",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=geometric+cluster+hanging+ceiling+pendant+light+living+room+Amazon+India",
+                  "flipkart": "https://www.flipkart.com/search?q=geometric+cluster+hanging+ceiling+pendant+light+living+room+Amazon+India",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=geometric+cluster+hanging+ceiling+pendant+light+living+room+Amazon+India",
+                  "myntra": "https://www.myntra.com/search?q=geometric+cluster+hanging+ceiling+pendant+light+living+room+Amazon+India",
+                  "ajio": "https://www.ajio.com/search/?text=geometric+cluster+hanging+ceiling+pendant+light+living+room+Amazon+India"
+                }
+              },
+              {
+                "name": "Warm White Up-Down LED Wall Sconces",
+                "description": "Minimalist aluminum dual-beam wall sconces for accent lighting on the living room feature wall.",
+                "estimated_price": 800.0,
+                "quantity": 2,
+                "search_terms": "modern up down led wall light warm white Flipkart",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=modern+up+down+led+wall+light+warm+white+Flipkart",
+                  "flipkart": "https://www.flipkart.com/search?q=modern+up+down+led+wall+light+warm+white+Flipkart",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=modern+up+down+led+wall+light+warm+white+Flipkart",
+                  "myntra": "https://www.myntra.com/search?q=modern+up+down+led+wall+light+warm+white+Flipkart",
+                  "ajio": "https://www.ajio.com/search/?text=modern+up+down+led+wall+light+warm+white+Flipkart"
+                }
+              },
+              {
+                "name": "Philips 20W Round Surface LED Panel Light",
+                "description": "Bright, glare-free cool day white ceiling lights ideal for kitchen countertop and task illumination.",
+                "estimated_price": 550.0,
+                "quantity": 2,
+                "search_terms": "Philips 20W surface mount round LED panel light white Amazon India",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=Philips+20W+surface+mount+round+LED+panel+light+white+Amazon+India",
+                  "flipkart": "https://www.flipkart.com/search?q=Philips+20W+surface+mount+round+LED+panel+light+white+Amazon+India",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=Philips+20W+surface+mount+round+LED+panel+light+white+Amazon+India",
+                  "myntra": "https://www.myntra.com/search?q=Philips+20W+surface+mount+round+LED+panel+light+white+Amazon+India",
+                  "ajio": "https://www.ajio.com/search/?text=Philips+20W+surface+mount+round+LED+panel+light+white+Amazon+India"
+                }
+              }
+            ]
+          },
+          {
+            "category": "Ceiling Fans",
+            "allocation": 7200.0,
+            "items": [
+              {
+                "name": "Crompton Hill Briz 1200 mm High Speed Ceiling Fan",
+                "description": "Reliable 1200mm sweep, 370 RPM high-speed ceiling fans with 100% copper motor for living room, kitchen, and bedrooms.",
+                "estimated_price": 1800.0,
+                "quantity": 4,
+                "search_terms": "Crompton Hill Briz 1200mm ceiling fan Flipkart",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=Crompton+Hill+Briz+1200mm+ceiling+fan+Flipkart",
+                  "flipkart": "https://www.flipkart.com/search?q=Crompton+Hill+Briz+1200mm+ceiling+fan+Flipkart",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=Crompton+Hill+Briz+1200mm+ceiling+fan+Flipkart",
+                  "myntra": "https://www.myntra.com/search?q=Crompton+Hill+Briz+1200mm+ceiling+fan+Flipkart",
+                  "ajio": "https://www.ajio.com/search/?text=Crompton+Hill+Briz+1200mm+ceiling+fan+Flipkart"
+                }
+              }
+            ]
+          },
+          {
+            "category": "Dining Furniture",
+            "allocation": 16500.0,
+            "items": [
+              {
+                "name": "Solid Wood 4-Seater Dining Table Set with Cushioned Chairs",
+                "description": "Compact Sheesham/engineered wood finish dining table with four comfortable upholstered chairs.",
+                "estimated_price": 16500.0,
+                "quantity": 1,
+                "search_terms": "4 seater wooden dining table set with chairs Wakefit Amazon India",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=4+seater+wooden+dining+table+set+with+chairs+Wakefit+Amazon+India",
+                  "flipkart": "https://www.flipkart.com/search?q=4+seater+wooden+dining+table+set+with+chairs+Wakefit+Amazon+India",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=4+seater+wooden+dining+table+set+with+chairs+Wakefit+Amazon+India",
+                  "myntra": "https://www.myntra.com/search?q=4+seater+wooden+dining+table+set+with+chairs+Wakefit+Amazon+India",
+                  "ajio": "https://www.ajio.com/search/?text=4+seater+wooden+dining+table+set+with+chairs+Wakefit+Amazon+India"
+                }
+              }
+            ]
+          },
+          {
+            "category": "Living Room Furniture",
+            "allocation": 19300.0,
+            "items": [
+              {
+                "name": "Wakefit / Furny 3-Seater Fabric Sofa",
+                "description": "High-density foam 3-seater compact sofa with durable jute-fabric upholstery for the living room.",
+                "estimated_price": 14500.0,
+                "quantity": 1,
+                "search_terms": "3 seater modern fabric sofa couch living room Amazon India",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=3+seater+modern+fabric+sofa+couch+living+room+Amazon+India",
+                  "flipkart": "https://www.flipkart.com/search?q=3+seater+modern+fabric+sofa+couch+living+room+Amazon+India",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=3+seater+modern+fabric+sofa+couch+living+room+Amazon+India",
+                  "myntra": "https://www.myntra.com/search?q=3+seater+modern+fabric+sofa+couch+living+room+Amazon+India",
+                  "ajio": "https://www.ajio.com/search/?text=3+seater+modern+fabric+sofa+couch+living+room+Amazon+India"
+                }
+              },
+              {
+                "name": "Bluewud Floor-Standing Engineered Wood TV Console Table",
+                "description": "Walnut finish entertainment unit with open shelves and storage compartments for TV setup and decor.",
+                "estimated_price": 4800.0,
+                "quantity": 1,
+                "search_terms": "Bluewud engineered wood TV unit table console Flipkart",
+                "shopping_links": {
+                  "amazon": "https://www.amazon.in/s?k=Bluewud+engineered+wood+TV+unit+table+console+Flipkart",
+                  "flipkart": "https://www.flipkart.com/search?q=Bluewud+engineered+wood+TV+unit+table+console+Flipkart",
+                  "ikea": "https://www.ikea.com/in/en/search/?q=Bluewud+engineered+wood+TV+unit+table+console+Flipkart",
+                  "myntra": "https://www.myntra.com/search?q=Bluewud+engineered+wood+TV+unit+table+console+Flipkart",
+                  "ajio": "https://www.ajio.com/search/?text=Bluewud+engineered+wood+TV+unit+table+console+Flipkart"
+                }
+              }
+            ]
+          }
+        ],
+        "remaining_budget": 2600.0,
+        "additional_suggestions": [
+          "Use the remaining Rs.2600 to purchase E27 warm-white LED filament bulbs for the cluster pendant light and pay for electrician installation charges.",
+          "Look out for festive sales (like Amazon Great Indian Festival or Flipkart Big Billion Days) to secure additional 10-15% discounts and free delivery.",
+          "Consider adding peel-and-stick backsplash wallpaper in the kitchen to complement the new bright LED panel lighting."
+        ],
+        "calculation_table": [
+          {
+            "category": "Lighting",
+            "items_count": 3,
+            "total_cost": 3050.0,
+            "percentage_of_budget": 6.1
+          },
+          {
+            "category": "Ceiling Fans",
+            "items_count": 1,
+            "total_cost": 1800.0,
+            "percentage_of_budget": 3.6
+          },
+          {
+            "category": "Dining Furniture",
+            "items_count": 1,
+            "total_cost": 16500.0,
+            "percentage_of_budget": 33.0
+          },
+          {
+            "category": "Living Room Furniture",
+            "items_count": 2,
+            "total_cost": 19300.0,
+            "percentage_of_budget": 38.6
+          }
+        ]
+      }
+    }
+  ]
+}

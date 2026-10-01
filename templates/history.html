@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Recommendation History - PocketSmart AI{% endblock %}
+{% block content %}
+
+<section class="planner-header">
+  <h1>Your Recommendation History</h1>
+  <p>View and manage all your previous budget plans and recommendations</p>
+</section>
+
+<div class="container">
+  <div id="history-list" class="history-grid">
+    <div class="loading"><div class="spinner"></div>Loading history...</div>
+  </div>
+</div>
+
+<!-- Detail modal-like panel -->
+<div id="detail-panel" class="container hidden">
+  <button class="btn btn-secondary" id="back-btn">← Back to History</button>
+  <div id="detail-content" style="margin-top:20px;"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const TYPE_ICONS = { home: "🏠", party: "🎉", jewelry: "💎" };
+  const listEl = document.getElementById("history-list");
+  const detailPanel = document.getElementById("detail-panel");
+  const detailContent = document.getElementById("detail-content");
+  const container = document.querySelector(".container");
+
+  document.getElementById("back-btn").addEventListener("click", () => {
+    detailPanel.classList.add("hidden");
+    document.querySelector(".history-grid").parentElement.classList.remove("hidden");
+  });
+
+  async function loadHistory() {
+    try {
+      const res = await pocketsmartFetch("/recommendation-history");
+      const data = await res.json();
+      if (!data.history || data.history.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">No recommendations yet. Try one of the planners to get started!</div>`;
+        return;
+      }
+      listEl.innerHTML = data.history.map(item => {
+        const icon = TYPE_ICONS[item.type] || "📌";
+        const total = item.summary.total_budget ? `₹${Number(item.summary.total_budget).toFixed(0)}` : "N/A";
+        const remaining = item.summary.remaining_budget !== undefined && item.summary.remaining_budget !== null
+          ? `₹${Number(item.summary.remaining_budget).toFixed(0)}` : "N/A";
+        return `
+          <div class="history-card">
+            <div class="h-type">${icon} ${item.type} Budget</div>
+            <div class="h-date">${new Date(item.timestamp).toLocaleString()}</div>
+            <div class="h-figures">
+              <span>Total: <strong>${total}</strong></span>
+              <span>Remaining: <strong>${remaining}</strong></span>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="viewDetails('${item.id}')">View Full Details</button>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      if (err.message !== "Unauthorized") {
+        listEl.innerHTML = `<div class="error-box">Failed to load history: ${err.message}</div>`;
+      }
+    }
+  }
+
+  async function viewDetails(id) {
+    try {
+      const res = await pocketsmartFetch(`/recommendation-details/${id}`);
+      const data = await res.json();
+      renderDetail(data);
+      document.querySelector(".container").classList.add("hidden");
+      detailPanel.classList.remove("hidden");
+    } catch (err) {
+      if (err.message !== "Unauthorized") alert("Failed to load details: " + err.message);
+    }
+  }
+
+  function renderDetail(item) {
+    detailContent.innerHTML = `
+      <h2>${(TYPE_ICONS[item.type] || "📌")} ${item.type.charAt(0).toUpperCase() + item.type.slice(1)} Recommendation</h2>
+      <p style="color:var(--text-muted);">${new Date(item.timestamp).toLocaleString()}</p>
+      <pre style="background:#fff;border-radius:10px;padding:20px;overflow:auto;box-shadow:var(--shadow);">${JSON.stringify(item.full_result, null, 2)}</pre>
+    `;
+  }
+
+  loadHistory();
+</script>
+{% endblock %}

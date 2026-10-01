@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - PocketSmart AI{% endblock %}
+{% block content %}
+
+<section class="welcome-banner">
+  <h1>Welcome, {{ user.full_name or user.username }}!</h1>
+  <p>Choose a budget planner to get started with your personalized financial planning experience</p>
+</section>
+
+<div class="container">
+  <div class="grid-3">
+    <div class="card planner-card">
+      <h3>🏠 Home Budget Planner</h3>
+      <p>Plan your interior design budget efficiently with AI-powered recommendations for furniture, lighting, and more.</p>
+      <a href="/home-planner" class="btn btn-primary btn-block">Get Started</a>
+    </div>
+    <div class="card planner-card">
+      <h3>🎉 Party Budget Planner</h3>
+      <p>Plan your perfect event with budget allocations for venue, catering, decorations, and entertainment.</p>
+      <a href="/party-planner" class="btn btn-primary btn-block">Get Started</a>
+    </div>
+    <div class="card planner-card">
+      <h3>💎 Jewelry Budget Planner</h3>
+      <p>Find the ideal jewelry pieces for any occasion that match your outfit and stay within your budget.</p>
+      <a href="/jewelry-planner" class="btn btn-primary btn-block">Get Started</a>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:24px;">
+    <a href="/history" class="btn btn-orange">View All Recommendation History</a>
+  </div>
+
+  <div class="activity-list">
+    <div class="activity-head">Recent Activity</div>
+    {% if recent %}
+      {% for item in recent %}
+      <div class="activity-item">
+        <div>
+          <div class="a-title">{{ item.recommendation_type | capitalize }} Budget Plan</div>
+          <div class="a-sub">Budget: ₹{{ "%.0f"|format(item.result_summary.total_budget or 0) }} &middot; Created on {{ item.timestamp[:10] }}</div>
+        </div>
+        <a href="/history">View</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="activity-item">
+        <div class="a-sub">No recommendations yet. Try one of the planners above to get started!</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

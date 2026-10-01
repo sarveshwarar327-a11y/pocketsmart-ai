@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% block title %}Party Budget Planner - PocketSmart AI{% endblock %}
+{% block content %}
+
+<section class="planner-header">
+  <h1>Party Budget Planner</h1>
+  <p>Plan your perfect event with AI-powered budget recommendations</p>
+</section>
+
+<div class="planner-form-wrapper">
+  <div id="alert-box"></div>
+
+  <form id="party-form">
+    <div class="form-section">
+      <h3>💰 Basic Information</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="total_budget">Total Budget (₹)</label>
+          <input type="number" id="total_budget" name="total_budget" min="1" step="1" value="50000" required>
+        </div>
+        <div class="form-group">
+          <label for="num_guests">Number of Guests</label>
+          <input type="number" id="num_guests" name="num_guests" min="1" value="30" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🎈 Event Details</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="party_type">Party Type</label>
+          <select id="party_type" name="party_type">
+            <option value="Birthday">Birthday</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Corporate">Corporate</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Baby Shower">Baby Shower</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="venue_type">Venue Type</label>
+          <select id="venue_type" name="venue_type">
+            <option value="Home">Home</option>
+            <option value="Banquet Hall">Banquet Hall</option>
+            <option value="Outdoor">Outdoor</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Hotel">Hotel</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📋 Party Needs</h3>
+      <div class="chip-row">
+        <div class="chip active" data-target="needs_catering">🍽️ Catering</div>
+        <div class="chip active" data-target="needs_decoration">🎊 Decoration</div>
+        <div class="chip active" data-target="needs_entertainment">🎵 Entertainment</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>💬 Additional Requirements</h3>
+      <div class="form-group">
+        <label for="additional_requirements">Special requests, themes, dietary restrictions, etc.</label>
+        <textarea id="additional_requirements" name="additional_requirements" rows="3"></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="submit-btn">📋 Generate Budget Plan</button>
+  </form>
+
+  <div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    Generating your personalized party plan with Gemini AI...
+  </div>
+
+  <div id="results" class="results-wrapper hidden"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const needs = { needs_catering: true, needs_decoration: true, needs_entertainment: true };
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      chip.classList.toggle("active");
+      needs[chip.dataset.target] = chip.classList.contains("active");
+    });
+  });
+
+  const form = document.getElementById("party-form");
+  const loading = document.getElementById("loading");
+  const resultsBox = document.getElementById("results");
+  const alertBox = document.getElementById("alert-box");
+  const submitBtn = document.getElementById("submit-btn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    alertBox.innerHTML = "";
+    resultsBox.classList.add("hidden");
+    resultsBox.innerHTML = "";
+    loading.classList.remove("hidden");
+    submitBtn.disabled = true;
+
+    const payload = {
+      total_budget: parseFloat(document.getElementById("total_budget").value),
+      num_guests: parseInt(document.getElementById("num_guests").value),
+      party_type: document.getElementById("party_type").value,
+      venue_type: document.getElementById("venue_type").value,
+      needs_catering: needs.needs_catering,
+      needs_decoration: needs.needs_decoration,
+      needs_entertainment: needs.needs_entertainment,
+      additional_requirements: document.getElementById("additional_requirements").value || null,
+    };
+
+    try {
+      const res = await pocketsmartFetch("/party-budget", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      loading.classList.add("hidden");
+      submitBtn.disabled = false;
+
+      if (!res.ok) {
+        const err = await res.json();
+        alertBox.innerHTML = `<div class="error-box">${err.detail || "Something went wrong."}</div>`;
+        return;
+      }
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      loading.classList.add("hidden");
+      submitBtn.disabled = false;
+      if (err.message !== "Unauthorized") {
+        alertBox.innerHTML = `<div class="error-box">Network error: ${err.message}</div>`;
+      }
+    }
+  });
+
+  function renderResults(data) {
+    let html = `
+      <div class="summary-box">
+        <div class="figure"><div class="label">Total Budget</div><div class="value">₹${(data.total_budget || 0).toFixed(2)}</div></div>
+        <div class="figure"><div class="label">Remaining Budget</div><div class="value">₹${(data.remaining_budget || 0).toFixed(2)}</div></div>
+      </div>
+    `;
+
+    (data.budget_breakdown || []).forEach(cat => {
+      html += `<div class="category-block"><div class="cat-header"><span>${cat.category}</span><span>Allocation: ₹${(cat.allocation || 0).toFixed(2)}</span></div>`;
+      (cat.items || []).forEach(item => { html += renderItem(item); });
+      html += `</div>`;
+    });
+
+    if (data.venue_suggestions && data.venue_suggestions.length) {
+      html += `<div class="category-block"><div class="cat-header"><span>Venue Suggestions</span></div>`;
+      data.venue_suggestions.forEach(v => {
+        let links = "";
+        if (v.search_links) {
+          links = `<div class="links-row">` + Object.entries(v.search_links)
+            .map(([name, url]) => `<a href="${url}" target="_blank" rel="noopener">${name}</a>`).join("") + `</div>`;
+        }
+        html += `
+          <div class="item-row">
+            <div class="item-top">
+              <div>
+                <div class="item-name">${v.name || ""}</div>
+                <div class="item-desc">${v.type || ""} &middot; Capacity: ${v.capacity ?? "N/A"}</div>
+              </div>
+              <div class="item-price">₹${(v.estimated_cost || 0).toFixed(2)}</div>
+            </div>
+            ${links}
+          </div>`;
+      });
+      html += `</div>`;
+    }
+
+    if (data.additional_suggestions && data.additional_suggestions.length) {
+      html += `<div class="suggestions-box"><h3>💡 Additional Suggestions</h3><ul>`;
+      data.additional_suggestions.forEach(s => html += `<li>${s}</li>`);
+      html += `</ul></div>`;
+    }
+
+    resultsBox.innerHTML = html;
+    resultsBox.classList.remove("hidden");
+    resultsBox.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function renderItem(item) {
+    let links = "";
+    if (item.shopping_links) {
+      links = `<div class="links-row">` + Object.entries(item.shopping_links)
+        .map(([name, url]) => `<a href="${url}" target="_blank" rel="noopener">${name}</a>`).join("") + `</div>`;
+    }
+    return `
+      <div class="item-row">
+        <div class="item-top">
+          <div>
+            <div class="item-name">${item.name || ""}</div>
+            <div class="item-desc">${item.description || ""} <span class="qty">(Qty: ${item.quantity ?? 1})</span></div>
+          </div>
+          <div class="item-price">₹${(item.estimated_price || 0).toFixed(2)}</div>
+        </div>
+        ${links}
+      </div>
+    `;
+  }
+</script>
+{% endblock %}

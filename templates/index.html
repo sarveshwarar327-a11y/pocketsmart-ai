@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}PocketSmart AI - Smart Budget & Recommendation Assistant{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <h1>PocketSmart AI</h1>
+  <h2>AI-Powered Budget Planning for Everyday Needs</h2>
+  <p>Make smarter financial decisions with personalized budget recommendations for home interiors,
+     parties, and jewelry purchases. Our AI helps you get the most value for your money.</p>
+  <div class="actions">
+    {% if user %}
+      <a href="/dashboard" class="btn btn-orange">Go to Dashboard</a>
+    {% else %}
+      <a href="/register" class="btn btn-orange">Get Started</a>
+      <a href="#features" class="btn btn-outline">Learn More</a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="container" id="features">
+  <h2 class="section-title">Our Smart Budget Planners</h2>
+  <p class="section-subtitle">Discover how PocketSmart helps you make better financial decisions across different areas of your life</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="icon">🏠</div>
+      <h3>Home Interior Budget Planner</h3>
+      <p>Get personalized recommendations for furniture, lighting, and decor that fit your style
+         preferences and budget constraints.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎉</div>
+      <h3>Party Budget Planner</h3>
+      <p>Plan your perfect event with smart budget allocations for venue, catering, decorations,
+         and entertainment.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💎</div>
+      <h3>Jewelry Budget Planner</h3>
+      <p>Find the ideal jewelry pieces for any occasion that match your outfit and budget, with
+         optional AI outfit-image analysis.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="testimonials" style="background:#fff; border-radius:16px; box-shadow:var(--shadow); padding-top:20px;">
+  <h2 class="section-title">What Our Users Say</h2>
+  <p class="section-subtitle">Real experiences from people who have transformed their financial planning with PocketSmart</p>
+  <div class="grid-3">
+    <div class="card" style="border-top-color: var(--orange);">
+      <p>"PocketSmart helped me furnish my new apartment without breaking the bank. The
+         recommendations were spot on and I saved nearly 30% of my original budget."</p>
+      <strong>Sarah K.</strong><br><span style="color:var(--text-muted); font-size:0.85rem;">Home Owner</span>
+    </div>
+    <div class="card" style="border-top-color: var(--orange);">
+      <p>"Planning my daughter's birthday party was so much easier with PocketSmart's budget
+         breakdown. The AI suggestions for affordable decorations and catering options were fantastic."</p>
+      <strong>Michael R.</strong><br><span style="color:var(--text-muted); font-size:0.85rem;">Parent</span>
+    </div>
+    <div class="card" style="border-top-color: var(--orange);">
+      <p>"The jewelry recommendations perfectly matched my outfit for the wedding. Saved me hours
+         of searching and I received so many compliments on my accessories!"</p>
+      <strong>Priya M.</strong><br><span style="color:var(--text-muted); font-size:0.85rem;">Fashion Enthusiast</span>
+    </div>
+  </div>
+</section>
+
+<section class="hero" style="padding:50px 20px;">
+  <h2 style="margin-bottom:8px;">Ready to Optimize Your Budget?</h2>
+  <p>Join PocketSmart today and start making smarter financial decisions across all areas of your life.</p>
+  <div class="actions">
+    {% if user %}
+      <a href="/dashboard" class="btn btn-orange">Go to Dashboard</a>
+    {% else %}
+      <a href="/login" class="btn btn-outline">Sign In</a>
+      <a href="/register" class="btn btn-orange">Create Account</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

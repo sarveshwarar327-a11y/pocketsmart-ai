@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PocketSmart AI{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="/">📦 PocketSmart</a>
+    <nav>
+      {% if user %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/home-planner">Home Planner</a>
+        <a href="/party-planner">Party Planner</a>
+        <a href="/jewelry-planner">Jewelry Planner</a>
+        <a href="/history">History</a>
+        <form action="/logout" method="post" style="display:inline">
+          <button type="submit" class="btn btn-outline" style="padding:8px 16px;">Logout</button>
+        </form>
+      {% else %}
+        <a href="/#features">Features</a>
+        <a href="/#testimonials">Testimonials</a>
+        <a href="/login">Sign In</a>
+        <a href="/register" class="btn btn-primary" style="padding:8px 18px;">Get Started</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    &copy; 2026 PocketSmart AI. All rights reserved. &middot; AI-powered budget planning for everyday needs.
+  </footer>
+
+  <script>
+    // Redirect to login on any 401 response from a protected API call.
+    async function pocketsmartFetch(url, options = {}) {
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        window.location.href = "/login";
+        throw new Error("Unauthorized");
+      }
+      return res;
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

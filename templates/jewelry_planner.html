@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Jewelry Budget Planner - PocketSmart AI{% endblock %}
+{% block content %}
+
+<section class="planner-header">
+  <h1>Jewelry Budget Planner</h1>
+  <p>Get AI-powered jewelry recommendations within your budget for any occasion</p>
+</section>
+
+<div class="planner-form-wrapper">
+  <div id="alert-box"></div>
+
+  <form id="jewelry-form">
+    <div class="form-section">
+      <h3>💰 Budget Details</h3>
+      <div class="form-group">
+        <label for="total_budget">Total Budget (₹)</label>
+        <input type="number" id="total_budget" name="total_budget" min="1" step="1" value="15000" required>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>🎀 Occasion & Preferences</h3>
+      <div class="form-group">
+        <label for="occasion">Occasion</label>
+        <select id="occasion" name="occasion">
+          <option value="Birthday">Birthday</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Anniversary">Anniversary</option>
+          <option value="Festival">Festival</option>
+          <option value="Casual">Casual</option>
+          <option value="Corporate Event">Corporate Event</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="preferences">Style Preferences</label>
+        <textarea id="preferences" name="preferences" rows="3" placeholder="Describe your style preferences, materials, colors, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>📷 Upload Outfit Image (optional)</h3>
+      <div class="img-preview-box" id="img-drop-zone">
+        <input type="file" id="image" name="image" accept="image/*" style="display:none;">
+        <div id="upload-placeholder">
+          <p>Click to upload a photo of your outfit so the AI can match colors and style.</p>
+          <button type="button" class="btn btn-secondary" id="choose-img-btn">Choose Image</button>
+        </div>
+        <div id="preview-wrapper" class="hidden">
+          <img id="preview-img" src="" alt="Outfit preview">
+          <button type="button" class="remove-img" id="remove-img-btn">🗑 Remove Image</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" id="submit-btn">✏️ Get Recommendations</button>
+  </form>
+
+  <div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    Analyzing your preferences with Gemini AI...
+  </div>
+
+  <div id="results" class="results-wrapper hidden"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const imageInput = document.getElementById("image");
+  const chooseBtn = document.getElementById("choose-img-btn");
+  const removeBtn = document.getElementById("remove-img-btn");
+  const placeholder = document.getElementById("upload-placeholder");
+  const previewWrapper = document.getElementById("preview-wrapper");
+  const previewImg = document.getElementById("preview-img");
+
+  chooseBtn.addEventListener("click", () => imageInput.click());
+
+  imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+      placeholder.classList.add("hidden");
+      previewWrapper.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  });
+
+  removeBtn.addEventListener("click", () => {
+    imageInput.value = "";
+    previewWrapper.classList.add("hidden");
+    placeholder.classList.remove("hidden");
+  });
+
+  const form = document.getElementById("jewelry-form");
+  const loading = document.getElementById("loading");
+  const resultsBox = document.getElementById("results");
+  const alertBox = document.getElementById("alert-box");
+  const submitBtn = document.getElementById("submit-btn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    alertBox.innerHTML = "";
+    resultsBox.classList.add("hidden");
+    resultsBox.innerHTML = "";
+    loading.classList.remove("hidden");
+    submitBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append("total_budget", document.getElementById("total_budget").value);
+    formData.append("occasion", document.getElementById("occasion").value);
+    formData.append("preferences", document.getElementById("preferences").value || "");
+    if (imageInput.files[0]) {
+      formData.append("image", imageInput.files[0]);
+    }
+
+    try {
+      const res = await pocketsmartFetch("/jewelry-budget", { method: "POST", body: formData });
+      loading.classList.add("hidden");
+      submitBtn.disabled = false;
+
+      if (!res.ok) {
+        const err = await res.json();
+        alertBox.innerHTML = `<div class="error-box">${err.detail || "Something went wrong."}</div>`;
+        return;
+      }
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      loading.classList.add("hidden");
+      submitBtn.disabled = false;
+      if (err.message !== "Unauthorized") {
+        alertBox.innerHTML = `<div class="error-box">Network error: ${err.message}</div>`;
+      }
+    }
+  });
+
+  function renderResults(data) {
+    let html = `
+      <div class="summary-box">
+        <div class="figure"><div class="label">Total Budget</div><div class="value">₹${(data.total_budget || 0).toFixed(2)}</div></div>
+        <div class="figure"><div class="label">Remaining Budget</div><div class="value">₹${(data.remaining_budget || 0).toFixed(2)}</div></div>
+      </div>
+    `;
+
+    if (data.outfit_analysis) {
+      const oa = data.outfit_analysis;
+      html += `<div class="category-block"><div class="cat-header"><span>Outfit Analysis</span></div>
+        <div class="item-row">
+          <div class="item-desc">
+            <strong>Colors:</strong> ${(oa.colors || []).join(", ") || "N/A"} &nbsp;|&nbsp;
+            <strong>Style:</strong> ${oa.style || "N/A"} &nbsp;|&nbsp;
+            <strong>Formality:</strong> ${oa.formality || "N/A"}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    html += `<div class="category-block"><div class="cat-header"><span>Jewelry Recommendations</span></div>`;
+    (data.jewelry_recommendations || []).forEach(item => {
+      let links = "";
+      if (item.shopping_links) {
+        links = `<div class="links-row">` + Object.entries(item.shopping_links)
+          .map(([name, url]) => `<a href="${url}" target="_blank" rel="noopener">${name}</a>`).join("") + `</div>`;
+      }
+      html += `
+        <div class="item-row">
+          <div class="item-top">
+            <div>
+              <div class="item-name">${item.item_type || ""}</div>
+              <div class="item-desc">${item.description || ""} <span class="qty">(Style: ${item.style || "N/A"})</span></div>
+            </div>
+            <div class="item-price">₹${(item.estimated_price || 0).toFixed(2)}</div>
+          </div>
+          ${links}
+        </div>`;
+    });
+    html += `</div>`;
+
+    if (data.styling_tips && data.styling_tips.length) {
+      html += `<div class="suggestions-box"><h3>💡 Styling Tips</h3><ul>`;
+      data.styling_tips.forEach(s => html += `<li>${s}</li>`);
+      html += `</ul></div>`;
+    }
+
+    resultsBox.innerHTML = html;
+    resultsBox.classList.remove("hidden");
+    resultsBox.scrollIntoView({ behavior: "smooth" });
+  }
+</script>
+{% endblock %}

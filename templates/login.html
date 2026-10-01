@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Sign In - PocketSmart AI{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-box">
+    <div class="logo">PocketSmart</div>
+    <div class="tagline">AI-Powered Budget Planning</div>
+    <h2>Welcome Back</h2>
+
+    <div id="alert-box"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Sign In →</button>
+    </form>
+
+    <div class="form-footer">
+      Don't have an account? <a href="/register">Create Account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("registered")) {
+    document.getElementById("alert-box").innerHTML =
+      '<div class="alert alert-success">Account created successfully. Please sign in.</div>';
+  }
+
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById("alert-box");
+    alertBox.innerHTML = "";
+
+    const formData = new URLSearchParams();
+    formData.append("username", document.getElementById("username").value);
+    formData.append("password", document.getElementById("password").value);
+
+    try {
+      const res = await fetch("/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alertBox.innerHTML = `<div class="alert alert-error">${err.detail || "Login failed"}</div>`;
+        return;
+      }
+      window.location.href = "/dashboard";
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">Network error: ${err.message}</div>`;
+    }
+  });
+</script>
+{% endblock %}

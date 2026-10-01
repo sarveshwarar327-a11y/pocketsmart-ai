@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Create Account - PocketSmart AI{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-box">
+    <div class="logo">PocketSmart</div>
+    <div class="tagline">AI-Powered Budget Planning</div>
+    <h2>Create Your Account</h2>
+
+    <div id="alert-box"></div>
+
+    <form id="register-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Choose a username" required minlength="3">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="full_name">Full Name (optional)</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create a strong password" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Create Account 👤+</button>
+    </form>
+
+    <div class="form-footer">
+      Already have an account? <a href="/login">Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById("register-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById("alert-box");
+    alertBox.innerHTML = "";
+
+    const pw = document.getElementById("password").value;
+    const cpw = document.getElementById("confirm_password").value;
+    if (pw !== cpw) {
+      alertBox.innerHTML = '<div class="alert alert-error">Passwords do not match.</div>';
+      return;
+    }
+
+    const formData = new FormData(document.getElementById("register-form"));
+    try {
+      const res = await fetch("/register", { method: "POST", body: formData });
+      if (res.redirected) {
+        window.location.href = res.url;
+        return;
+      }
+      if (!res.ok) {
+        const err = await res.json();
+        alertBox.innerHTML = `<div class="alert alert-error">${err.detail || "Registration failed"}</div>`;
+      }
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">Network error: ${err.message}</div>`;
+    }
+  });
+</script>
+{% endblock %}
